@@ -1,5 +1,10 @@
 import random
 import ggplot as gp
+import pandas as pd
+import warnings
+
+warnings.filterwarnings("ignore")
+
 common=49
 rare=36
 epic=27
@@ -102,10 +107,17 @@ def get_all_cards(common:int, rare:int, epic:int, legendary:int):
     return packopened
 
 total=0
+outcome = []
 
-for i in range(10000):
-    times = get_all_cards(common, rare, epic, legendary)
-    total += times
-    print(times)
+for i in range(1000):
+    time = get_all_cards(common, rare, epic, legendary)
+    total += time
+    #print(time)
+    outcome.append(time)
 
-print(total/10000)
+outcome = pd.DataFrame(outcome,columns=['times'])
+# print(outcome['times'].value_counts())
+hist = gp.ggplot(gp.aes(x='times',fill = 'times'.value_counts()), data=outcome) + gp.geom_histogram(bins = 30)
+print(hist)
+#scatter = gp.ggplot(gp.aes(y='times'), data=outcome) + gp.geom_point(color = 'red')
+# print(scatter)
