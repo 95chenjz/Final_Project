@@ -37,6 +37,7 @@ class pack_num:
 
 
 
+
     def packs_for_all_cards(self):
 
         dustgetc = 5
@@ -63,7 +64,7 @@ class pack_num:
         while dustneeded > dusthave:
 
             cardsget = self.open_pack(quan, prob, lgd_had)
-            # print(cardsget)
+
             packopened += 1
 
             for card in cardsget:
@@ -117,6 +118,7 @@ class pack_num:
                         lgd_had.append(card[1])
                     else:
                         dusthave += dustgetl
+
         return packopened
 
 if __name__ == '__main__':
@@ -132,7 +134,6 @@ if __name__ == '__main__':
     for i in range(10000):
         times = num.packs_for_all_cards()
         total += times
-        # print(time)
         outcome.append(times)
 
     print(total/10000)
