@@ -21,7 +21,7 @@ pgl=0.0011
 weights=[pc,pr,pe,pl,pgc,pgr,pge,pgl]
 
 
-def packopen(expansion,weights):
+def packopen(expansion:list,weights:list,lgd_had:list):
     level=['common','rare','epic','legendary','goldencommon','goldenrare','goldenepic','goldenlegendary']
     cardsget=[]
     cardlevel = random.choices(level, weights, k=5)
@@ -34,7 +34,7 @@ def packopen(expansion,weights):
         elif level == 'epic' or level == 'goldenepic':
             cardsget.append((level, random.randint(1, expansion[2])))
         elif level == 'legendary' or level == 'goldenlegendary':
-            cardsget.append((level, random.randint(1, expansion[3])))
+            cardsget.append((level, random.choice(list(set([i for i in range(1, expansion[3]+1)]).difference(set(lgd_had))))))
     #print(cardsget)
     return cardsget
 
@@ -56,10 +56,10 @@ def get_all_cards(common:int, rare:int, epic:int, legendary:int):
     packopened = 0
     dustneeded = 2 * common * dustusec + 2 * rare * dustuser + 2 * epic * dustusee + legendary * dustusel
     dusthave = 0
-
+    lgd_had = []
     while dustneeded > dusthave:
 
-        cardsget = packopen(frozen,weights)
+        cardsget = packopen(frozen,weights,lgd_had)
         packopened += 1
 
         for card in cardsget:
@@ -102,6 +102,7 @@ def get_all_cards(common:int, rare:int, epic:int, legendary:int):
                 if card not in owned.keys():
                     owned[card] = 1
                     dustneeded -= dustusel
+                    lgd_had.append(card[1])
                 else:
                     dusthave += dustgetl
     return packopened
@@ -115,9 +116,13 @@ for i in range(1000):
     #print(time)
     outcome.append(time)
 
-outcome = pd.DataFrame(outcome,columns=['times'])
-# print(outcome['times'].value_counts())
-hist = gp.ggplot(gp.aes(x='times',fill = 'times'.value_counts()), data=outcome) + gp.geom_histogram(bins = 30)
-print(hist)
-#scatter = gp.ggplot(gp.aes(y='times'), data=outcome) + gp.geom_point(color = 'red')
-# print(scatter)
+print(total/1000)
+
+# outcome = pd.concat([pd.DataFrame([i for i in range(1000)], columns=['index']),pd.DataFrame(outcome,columns=['times'])], axis=1)
+# # outcome = pd.merge(outcome, pd.DataFrame(outcome['times'].value_counts(), columns='frequency'))
+# print(outcome)
+# # print(outcome['times'].value_counts())
+# print(gp.ggplot(gp.aes(x='times'),data=outcome) + gp.geom_histogram(bins = 30) + gp.geom_density())
+# # scatter = gp.ggplot(gp.aes(x='index', y='times'), data=outcome) + gp.geom_point(color = 'red')
+# # print(scatter)
+# # gp.ggplot(gp.aes(x='times'), data=outcome) + gp.geom_histogram(bins = 30)
