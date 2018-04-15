@@ -1,5 +1,4 @@
 import random
-import ggplot as gp
 import pandas as pd
 import warnings
 
@@ -34,8 +33,8 @@ def packopen(expansion:list,weights:list,lgd_had:list):
         elif level == 'epic' or level == 'goldenepic':
             cardsget.append((level, random.randint(1, expansion[2])))
         elif level == 'legendary' or level == 'goldenlegendary':
-            cardsget.append((level, random.choice(list(set([i for i in range(1, expansion[3]+1)]).difference(set(lgd_had))))))
-    #print(cardsget)
+            cardsget.append((level, random.choice(list(set(list(range(1, expansion[3]+1))).difference(set(lgd_had))))))
+
     return cardsget
 
 dustgetc=5
@@ -110,13 +109,13 @@ def get_all_cards(common:int, rare:int, epic:int, legendary:int):
 total=0
 outcome = []
 
-for i in range(1000):
+for i in range(10000):
     time = get_all_cards(common, rare, epic, legendary)
     total += time
     #print(time)
     outcome.append(time)
 
-print(total/1000)
+print(total/10000)
 
 # outcome = pd.concat([pd.DataFrame([i for i in range(1000)], columns=['index']),pd.DataFrame(outcome,columns=['times'])], axis=1)
 # # outcome = pd.merge(outcome, pd.DataFrame(outcome['times'].value_counts(), columns='frequency'))
