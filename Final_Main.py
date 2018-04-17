@@ -4,6 +4,8 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+
+
 common=49
 rare=36
 epic=27
@@ -51,25 +53,33 @@ dustusee=400
 dustusel=1600
 
 def get_all_cards(common:int, rare:int, epic:int, legendary:int):
+
     owned = {}
     packopened = 0
     dustneeded = 2 * common * dustusec + 2 * rare * dustuser + 2 * epic * dustusee + legendary * dustusel
     dusthave = 0
     lgd_had = []
+
     while dustneeded > dusthave:
 
         cardsget = packopen(frozen,weights,lgd_had)
+        print(cardsget)
         packopened += 1
 
         for card in cardsget:
+
             if card[0]=='goldencommon':
                 dusthave += dustgetgc
+
             elif card[0]=='goldenrare':
                 dusthave += dustgetgr
+
             elif card[0]=='goldenepic':
                 dusthave += dustgetge
+
             elif card[0]=='goldenlegendary':
                 dusthave += dustgetgl
+
             elif card[0] == 'common':
                 if card not in owned.keys():
                     owned[card] = 1
@@ -79,6 +89,7 @@ def get_all_cards(common:int, rare:int, epic:int, legendary:int):
                     dustneeded -= dustusec
                 else:
                     dusthave += dustgetc
+
             elif card[0] == 'rare':
                 if card not in owned.keys():
                     owned[card] = 1
@@ -88,6 +99,7 @@ def get_all_cards(common:int, rare:int, epic:int, legendary:int):
                     dustneeded -= dustuser
                 else:
                     dusthave += dustgetr
+
             elif card[0] == 'epic':
                 if card not in owned.keys():
                     owned[card] = 1
@@ -97,6 +109,7 @@ def get_all_cards(common:int, rare:int, epic:int, legendary:int):
                     dustneeded -= dustusee
                 else:
                     dusthave += dustgete
+
             elif card[0] == 'legendary':
                 if card not in owned.keys():
                     owned[card] = 1
@@ -115,7 +128,7 @@ for i in range(10000):
     #print(time)
     outcome.append(time)
 
-print(total/10000)
+# print(total/10000)
 
 # outcome = pd.concat([pd.DataFrame([i for i in range(1000)], columns=['index']),pd.DataFrame(outcome,columns=['times'])], axis=1)
 # # outcome = pd.merge(outcome, pd.DataFrame(outcome['times'].value_counts(), columns='frequency'))

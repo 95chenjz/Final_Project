@@ -42,9 +42,11 @@ class pack_num:
             elif level == 'epic' or level == 'goldenepic':
                 cardsget.append((level, random.randint(1, expansion[2])))
             elif level == 'legendary' or level == 'goldenlegendary':
-
-                cardsget.append(
-                    (level, random.choice(list(set(range(1, expansion[3] + 1)).difference(set(lgd_had))))))
+                if len(lgd_had) < expansion[3]:
+                    cardsget.append(
+                        (level, random.choice(list(set(range(1, expansion[3] + 1)).difference(set(lgd_had))))))
+                else:
+                    cardsget.append((level, random.randint(1, expansion[3])))
 
         return cardsget
 
@@ -191,19 +193,21 @@ class pack_num:
 
         :return:
         """
-        quan = copy.copy(self.quan_list)
-        prob = copy.copy(self.prob_list)
+        # quan = copy.copy(self.quan_list)
+        # prob = copy.copy(self.prob_list)
+        quan = self.quan_list
+        prob = self.prob_list
         owned = {}
         packopened = 0
         # dustneeded = 2 * quan[0] * dustusec + 2 * quan[1] * dustuser + 2 * quan[2] * dustusee + quan[3] * dustusel
         dusthave = 0
         lgd_had = []
 
-        while (sum(owned.values()) < 247):
+        while (sum(owned.values()) < (sum(quan) * 2 - quan[3])):
             # print(sum(owned.values()))
 
-            if (len(lgd_had) == quan[3]):
-                prob[3] = prob[7] = 0
+            # if (len(lgd_had) == quan[3]):
+            #     prob[3] = prob[7] = 0
 
             cardsget = self.open_pack(quan, prob, lgd_had)
             packopened += 1
@@ -213,15 +217,15 @@ class pack_num:
 
             dusthave += dust_gain
 
-            while ((dusthave >= 100) & (sum(owned.values()) < 247)):
+            while ((dusthave >= 100) & (sum(owned.values()) < (sum(quan) * 2 - quan[3]))):
                 try:
-                    if (len(lgd_had) == quan[3]):
-                        prob[3] = prob[7] = 0
+                    # if (len(lgd_had) == quan[3]):
+                    #     prob[3] = prob[7] = 0
 
                     cardsget = self.open_pack(quan, prob, lgd_had)
                     # print(owned)
                     dust_gain, owned, lgd_had = self.get_dust(cardsget, owned, lgd_had)
-                    dusthave += dust_gain - 100
+                    dusthave += dust_gain - 140
 
 
                 except IndexError:
@@ -241,11 +245,11 @@ if __name__ == '__main__':
     weight = [0.7016, 0.2174, 0.0395, 0.0084, 0.0147, 0.0147, 0.0026,0.0011]
 
     num = pack_num(frozen, weight)
-
+    # print(sum(frozen)*2-frozen[3])
     for i in range(10000):
             # times = num.packs_for_all_cards()
         times = num.dust_for_pack()
-        # print(times)
+        print(times)
         total += times
             # outcome.append(times)
 
