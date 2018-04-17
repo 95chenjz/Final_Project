@@ -2,22 +2,15 @@ import random
 import pandas as pd
 import warnings
 import time
-import copy
+
 
 warnings.filterwarnings("ignore")
 
-dustgetc = 5
-dustgetr = 20
-dustgete = 100
-dustgetl = 400
-dustgetgc = 50
-dustgetgr = 100
-dustgetge = 400
-dustgetgl = 1600
-dustusec = 40
-dustuser = 100
-dustusee = 400
-dustusel = 1600
+get_dust = {'common': 5, 'rare': 20, 'epic': 100, 'legendary': 400,
+            'goldencommon': 50, 'goldenrare': 100,
+            'goldenepic': 400, 'goldenlegendary': 1600}
+
+use_dust = {'common': 40, 'rare': 100, 'epic': 400, 'legendary': 1600}
 
 class pack_num:
 
@@ -28,212 +21,134 @@ class pack_num:
 
 
     @staticmethod
-    def open_pack(expansion:list,weights:list,lgd_had:list):
+    def open_pack(expansion:list,weights:list,lgd_had:list, empire=False, lgd_repeat=True):
 
         level = ['common', 'rare', 'epic', 'legendary', 'goldencommon', 'goldenrare', 'goldenepic', 'goldenlegendary']
         cardsget = []
-        cardlevel = random.choices(level, weights, k=5)
+        prob = weights
+
+        if empire:
+            for i in (0,1,4,5):
+                prob[i] = 0
+
+        cardlevel = random.choices(level, prob, k=5)
 
         for level in cardlevel:
+
             if level == 'common' or level == 'goldencommon':
                 cardsget.append((level, random.randint(1, expansion[0])))
+
             elif level == 'rare' or level == 'goldenrare':
                 cardsget.append((level, random.randint(1, expansion[1])))
+
             elif level == 'epic' or level == 'goldenepic':
                 cardsget.append((level, random.randint(1, expansion[2])))
+
             elif level == 'legendary' or level == 'goldenlegendary':
-                if len(lgd_had) < expansion[3]:
-                    cardsget.append(
-                        (level, random.choice(list(set(range(1, expansion[3] + 1)).difference(set(lgd_had))))))
-                else:
+
+                if lgd_repeat or (len(lgd_had) >= expansion[3]):
                     cardsget.append((level, random.randint(1, expansion[3])))
+                else:
+                    cardsget.append(
+                            (level, random.choice(list(set(range(1, expansion[3] + 1)).difference(set(lgd_had))))))
 
         return cardsget
-
-
-
-    def packs_for_all_cards(self):
-
-        quan = self.quan_list
-        prob = self.prob_list
-        owned = {}
-        packopened = 0
-        dustneeded = 2 * quan[0] * dustusec + 2 * quan[1] * dustuser + 2 * quan[2] * dustusee + quan[3] * dustusel
-        dusthave = 0
-        lgd_had = []
-
-        while dustneeded > dusthave:
-
-            cardsget = self.open_pack(quan, prob, lgd_had)
-
-            packopened += 1
-
-            for card in cardsget:
-
-                if card[0] == 'goldencommon':
-                    dusthave += dustgetgc
-
-                elif card[0] == 'goldenrare':
-                    dusthave += dustgetgr
-
-                elif card[0] == 'goldenepic':
-                    dusthave += dustgetge
-
-                elif card[0] == 'goldenlegendary':
-                    dusthave += dustgetgl
-
-                elif card[0] == 'common':
-                    if card not in owned.keys():
-                        owned[card] = 1
-                        dustneeded -= dustusec
-                    elif owned[card] == 1:
-
-                        owned[card] = 2
-                        dustneeded -= dustusec
-                    else:
-                        dusthave += dustgetc
-
-                elif card[0] == 'rare':
-                    if card not in owned.keys():
-                        owned[card] = 1
-                        dustneeded -= dustuser
-                    elif owned[card] == 1:
-                        owned[card] = 2
-                        dustneeded -= dustuser
-                    else:
-                        dusthave += dustgetr
-
-                elif card[0] == 'epic':
-                    if card not in owned.keys():
-                        owned[card] = 1
-                        dustneeded -= dustusee
-                    elif owned[card] == 1:
-                        owned[card] = 2
-                        dustneeded -= dustusee
-                    else:
-                        dusthave += dustgete
-
-                elif card[0] == 'legendary':
-                    if card not in owned.keys():
-                        owned[card] = 1
-                        dustneeded -= dustusel
-                        lgd_had.append(card[1])
-                    else:
-                        dusthave += dustgetl
-
-        return packopened
 
 
     @staticmethod
     def get_dust(cardsget: list, owned: dict, lgd_had: list):
 
         dust_gain = 0
+        dust_needed_decrease = 0
+
 
         for card in cardsget:
+            if card[0] in ['common', 'rare', 'epic']:
 
-            if card[0] == 'goldencommon':
-                dust_gain += dustgetgc
-
-            elif card[0] == 'goldenrare':
-                dust_gain += dustgetgr
-
-            elif card[0] == 'goldenepic':
-                dust_gain += dustgetge
-
-            elif card[0] == 'goldenlegendary':
-                dust_gain += dustgetgl
-
-            elif card[0] == 'common':
                 if card not in owned.keys():
                     owned[card] = 1
-                    # dustneeded -= dustusec
+                    dust_needed_decrease+= use_dust[card[0]]
 
                 elif owned[card] == 1:
                     owned[card] = 2
-                    # dustneeded -= dustusec
-                else:
-                    dust_gain += dustgetc
+                    dust_needed_decrease += use_dust[card[0]]
 
-            elif card[0] == 'rare':
-                if card not in owned.keys():
-                    owned[card] = 1
-                    # dustneeded -= dustuser
-                elif owned[card] == 1:
-                    owned[card] = 2
-                    # dustneeded -= dustuser
                 else:
-                    dust_gain += dustgetr
+                    dust_gain += get_dust[card[0]]
 
-            elif card[0] == 'epic':
-                if card not in owned.keys():
-                    owned[card] = 1
-                    # dustneeded -= dustusee
-                elif owned[card] == 1:
-                    owned[card] = 2
-                    # dustneeded -= dustusee
-                else:
-                    dust_gain += dustgete
 
             elif card[0] == 'legendary':
                 if card not in owned.keys():
                     owned[card] = 1
-                    # dustneeded -= dustusel
+                    dust_needed_decrease += use_dust[card[0]]
                     lgd_had.append(card[1])
 
                 else:
-                    dust_gain += dustgetl
+                    dust_gain += get_dust[card[0]]
 
-        return dust_gain, owned, lgd_had
+            else:
+                dust_gain = get_dust[card[0]]
+
+        return dust_gain, owned, lgd_had, dust_needed_decrease
 
 
 
 
-    def dust_for_pack(self):
+    def dust_for_pack(self, lgd_repeat=True, dust_cost=140):
         """
 
         :return:
         """
-        # quan = copy.copy(self.quan_list)
-        # prob = copy.copy(self.prob_list)
         quan = self.quan_list
         prob = self.prob_list
         owned = {}
         packopened = 0
-        # dustneeded = 2 * quan[0] * dustusec + 2 * quan[1] * dustuser + 2 * quan[2] * dustusee + quan[3] * dustusel
         dusthave = 0
         lgd_had = []
 
         while (sum(owned.values()) < (sum(quan) * 2 - quan[3])):
-            # print(sum(owned.values()))
 
-            # if (len(lgd_had) == quan[3]):
-            #     prob[3] = prob[7] = 0
-
-            cardsget = self.open_pack(quan, prob, lgd_had)
+            cardsget = self.open_pack(quan, prob, lgd_had, lgd_repeat=lgd_repeat)
             packopened += 1
 
-
-            dust_gain, owned, lgd_had = self.get_dust(cardsget, owned, lgd_had)
+            dust_gain, owned, lgd_had, dust_need_decrease = self.get_dust(cardsget, owned, lgd_had)
 
             dusthave += dust_gain
 
-            while ((dusthave >= 100) & (sum(owned.values()) < (sum(quan) * 2 - quan[3]))):
+            while ((dusthave >= dust_cost) & (sum(owned.values()) < (sum(quan) * 2 - quan[3]))):
                 try:
-                    # if (len(lgd_had) == quan[3]):
-                    #     prob[3] = prob[7] = 0
+                    cardsget = self.open_pack(quan, prob, lgd_had, lgd_repeat=lgd_repeat)
 
-                    cardsget = self.open_pack(quan, prob, lgd_had)
-                    # print(owned)
-                    dust_gain, owned, lgd_had = self.get_dust(cardsget, owned, lgd_had)
-                    dusthave += dust_gain - 140
-
+                    dust_gain, owned, lgd_had, dust_need_decrease = self.get_dust(cardsget, owned, lgd_had)
+                    dusthave += dust_gain - dust_cost
 
                 except IndexError:
                     print(cardsget, lgd_had)
 
-
         return packopened
 
+    def dust_for_cards(self, empire = False, lgd_repeat = True, bonus = 40):
+
+        quan = self.quan_list
+        prob = self.prob_list
+        owned = {}
+        packopened = 0
+        dusthave = 0
+        dustneeded = 2 * quan[0] * list(use_dust.values())[0] + 2 * quan[1] * list(use_dust.values())[1] \
+                     + 2 * quan[2] * list(use_dust.values())[2] + quan[3] * list(use_dust.values())[3]
+        lgd_had=[]
+
+        while dustneeded>dusthave:
+            packopened+=1
+            if (packopened/bonus > 1)&(packopened%bonus==0):
+                cardsget=self.open_pack(quan, prob, lgd_had,lgd_repeat=lgd_repeat,empire=empire)
+            else:
+                cardsget = self.open_pack(quan, prob, lgd_had,lgd_repeat=lgd_repeat)
+                # print(cardsget)
+            dust_gain, owned, lgd_had,dust_needed_decrease=self.get_dust(cardsget, owned, lgd_had)
+            dustneeded-=dust_needed_decrease
+            dusthave+=dust_gain
+        return packopened
 
 
 if __name__ == '__main__':
@@ -247,8 +162,8 @@ if __name__ == '__main__':
     num = pack_num(frozen, weight)
     # print(sum(frozen)*2-frozen[3])
     for i in range(10000):
-            # times = num.packs_for_all_cards()
-        times = num.dust_for_pack()
+        times = num.dust_for_cards(lgd_repeat=False)
+        # times = num.dust_for_pack(lgd_repeat=False)
         print(times)
         total += times
             # outcome.append(times)

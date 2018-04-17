@@ -134,7 +134,7 @@ class pack_num:
                 cardsget=self.open_pack_legendaryrepeat(quan, prob)
             else:
                 cardsget = self.open_empire_pack(quan, bonusprob)
-                print(cardsget)
+                # print(cardsget)
             dust_needed_decrease, dust_gain, owned, lgd_had=self.get_dust(cardsget, owned, lgd_had)
             dustneeded-=dust_needed_decrease
             dusthave+=dust_gain

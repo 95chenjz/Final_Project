@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+
 from bs4 import BeautifulSoup
 
 def get_prob_table(url):
