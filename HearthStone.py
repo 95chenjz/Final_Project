@@ -1,7 +1,9 @@
 import random
 import pandas as pd
 import warnings
-import time
+import matplotlib.pyplot as plt
+import seaborn as sns
+import copy
 
 
 warnings.filterwarnings("ignore")
@@ -25,12 +27,12 @@ class pack_num:
 
         level = ['common', 'rare', 'epic', 'legendary', 'goldencommon', 'goldenrare', 'goldenepic', 'goldenlegendary']
         cardsget = []
-        prob = weights
+        prob = copy.copy(weights)
 
         if empire:
             for i in (0,1,4,5):
                 prob[i] = 0
-
+        # print(prob)
         cardlevel = random.choices(level, prob, k=5)
 
         for level in cardlevel:
@@ -94,7 +96,7 @@ class pack_num:
 
 
 
-    def dust_for_pack(self, lgd_repeat=True, dust_cost=140):
+    def dust_for_pack(self, lgd_repeat=True, dust_cost=125):
         """
 
         :return:
@@ -127,10 +129,10 @@ class pack_num:
 
         return packopened
 
-    def dust_for_cards(self, empire = False, lgd_repeat = True, bonus = 40):
+    def dust_for_cards(self, empire = False, lgd_repeat = True, bonus = 115):
 
-        quan = self.quan_list
-        prob = self.prob_list
+        quan = copy.copy(self.quan_list)
+        prob = copy.copy(self.prob_list)
         owned = {}
         packopened = 0
         dusthave = 0
@@ -141,34 +143,11 @@ class pack_num:
         while dustneeded>dusthave:
             packopened+=1
             if (packopened/bonus > 1)&(packopened%bonus==0):
-                cardsget=self.open_pack(quan, prob, lgd_had,lgd_repeat=lgd_repeat,empire=empire)
+                cardsget=self.open_pack(quan, prob, lgd_had, lgd_repeat=lgd_repeat, empire=empire)
             else:
-                cardsget = self.open_pack(quan, prob, lgd_had,lgd_repeat=lgd_repeat)
+                cardsget = self.open_pack(quan, prob, lgd_had, lgd_repeat=lgd_repeat)
                 # print(cardsget)
             dust_gain, owned, lgd_had,dust_needed_decrease=self.get_dust(cardsget, owned, lgd_had)
             dustneeded-=dust_needed_decrease
             dusthave+=dust_gain
         return packopened
-
-
-if __name__ == '__main__':
-    start = time.process_time()
-    total = 0
-    outcome = []
-
-    frozen = [49,36,27,23]
-    weight = [0.7016, 0.2174, 0.0395, 0.0084, 0.0147, 0.0147, 0.0026,0.0011]
-
-    num = pack_num(frozen, weight)
-    # print(sum(frozen)*2-frozen[3])
-    for i in range(10000):
-        times = num.dust_for_cards(lgd_repeat=False)
-        # times = num.dust_for_pack(lgd_repeat=False)
-        print(times)
-        total += times
-            # outcome.append(times)
-
-
-    print(total/10000)
-    elapsed_time = time.process_time() - start
-    print(elapsed_time)
