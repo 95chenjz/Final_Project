@@ -1,20 +1,10 @@
-Create a FORK of this repository to store your code, data, and documentation for the final project. Detailed instructions for this assignment are in the course Moodle site.  The reason I'm asking you to fork this empty repository instead of creating a stand-alone repository is that it will be much easier for me and all students in the course to find all of our projects for code review and for grading. You can even get code review from students in the other section of IS590PR this way.
-
-Even though your fork of this repository shall be public, you'll still need to explicitly add any students on your team as Collaborators in the Settings. That way you can grant them write privileges.
-
-DELETE these lines from TEMPLATE up.
-
-TEMPLATE for your report:
-
 # Title: Trade-off of Three Pack-opening Strategies in Hearthstone —— Using Monte Carlo Simulation
 
 
 ## Team Member(s): Jianzhang Chen, Xiaokai Cui, Yichong Guo
-(Note: Don't put your email addresses here (which is public).  If a student wants their NAME hidden as well, due to optional FERPA regulations, they can be listed purely by their GitHub ID).
+
 
 # Monte Carlo Simulation Scenario & Purpose:
-(be sure to read the instructions given in course Moodle)
-
 There are four rules for opening packs in Hearthstone:
 1. Each pack contains 5 cards.
 2. There are maximum numbers for each type of cards: 2 Common, 2 Rare, 2 Epic and 1 Legendary.
@@ -30,8 +20,6 @@ Blizzard decides to take the first strategy. We want to find out the certain par
 
 
 ## Simulation's variables of uncertainty
-List and describe your simulation's variables of uncertainty (where you're using pseudo-random number generation). For each such variable, how did you decide the range and probability distribution to use?  Do you think it's a good representation of reality?
-
 We decide to use the expansion card set ‘Knights of the Frozen Throne’. It has 49 Common cards, 36 Rare cards, 27 Epic cards and 23 Legendary cards. Our simulation's variables of uncertainty are the probabilities of opening each type of card when we open a pack. The probabilities of getting a card of Common, Rare, Epic, Legendary, Golden Common, Golden Rare, Golden Epic and Golden Legendary are 70.16%, 21.74%, 3.95%, 0.84%, 1.47%, 1.47%, 0.26% and 0.11%. We think the outcome of running 5,000 times of simulations (we decide this number by running different times and observe when the lines converge) is a good representation of reality.
 
 
