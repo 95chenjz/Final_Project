@@ -152,14 +152,14 @@ if __name__ == '__main__':
 
     num = pack_num(frozen, weight)
 
-    for i in range(10000):
+    for i in range(10):
             # times = num.packs_for_all_cards()
-        times = num.empire_packs_for_all_cards(90)
+        times = num.empire_packs_for_all_cards(150)
         print(times)
         total += times
             # outcome.append(times)
 
 
-    print(total/10000)
+    print(total/10)
     elapsed_time = time.process_time() - start
     print(elapsed_time)

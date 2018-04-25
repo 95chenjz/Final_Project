@@ -5,6 +5,10 @@ import seaborn as sns
 import numpy as np
 import math
 from Simulation import simulate
+import warnings
+
+warnings.filterwarnings("ignore")
+
 
 if __name__ == '__main__':
     start = time.process_time()
@@ -28,25 +32,3 @@ if __name__ == '__main__':
 
 
     print(total/50)
-    # elapsed_time = time.process_time() - start
-    # print(elapsed_time)
-
-
-    # ax = sns.distplot(outcome)
-    # mu = np.mean(outcome)
-    # sigma = math.sqrt(np.var(outcome))
-    #
-    # clrs = [sns.xkcd_rgb['pale red'],
-    #         sns.xkcd_rgb['dusty purple'],
-    #         sns.xkcd_rgb['pale red']]
-    #
-    #
-    #
-    # ax.vlines([mu - sigma, mu, mu + sigma], 0.0, [0.35, 0.55, 0.35], linestyle='-.',
-    #           colors= clrs, alpha=0.5)
-    #
-    # ax.set(title='Distribution of the Number of Packs in the First Strategy',
-    #        xlabel='Packs', ylabel='Probability')
-    #
-    # sns.despine(offset=5, trim=True)
-    # plt.show()
