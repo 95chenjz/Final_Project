@@ -105,6 +105,13 @@ class pack_num:
                     owned - a dict of cards we have already had
                     lgd_had - a list of owned legend cards
                     dust_needed_decrease - deduction from total dust we need
+
+        >>> pack_num.get_dust([('common', 10), ('rare', 14), ('common', 39), ('common', 36), ('common', 18)],{},[])
+        (0, {('common', 10): 1, ('rare', 14): 1, ('common', 39): 1, ('common', 36): 1, ('common', 18): 1}, [], 260)
+        >>> pack_num.get_dust([('legendary', 10), ('rare', 14), ('common', 39), ('common', 36), ('common', 18)],{('common', 10): 1, ('rare', 14): 2, ('common', 39): 2, ('common', 36): 1, ('common', 18): 1},[])
+        (25, {('common', 10): 1, ('rare', 14): 2, ('common', 39): 2, ('common', 36): 2, ('common', 18): 2, ('legendary', 10): 1}, [10], 1680)
+        >>> pack_num.get_dust([('legendary', 10), ('rare', 14), ('goldencommon', 39), ('common', 36), ('goldenlegendary', 18)],{('common', 10): 1, ('rare', 14): 2, ('common', 39): 2, ('common', 36): 1, ('common', 18): 1},[8,9])
+        (1670, {('common', 10): 1, ('rare', 14): 2, ('common', 39): 2, ('common', 36): 2, ('common', 18): 1, ('legendary', 10): 1}, [8, 9, 10], 1640)
         """
 
         # dust you already got
@@ -140,7 +147,7 @@ class pack_num:
                     dust_gain += get_dust[card[0]]
 
             else:
-                dust_gain = get_dust[card[0]]
+                dust_gain += get_dust[card[0]]
 
         return dust_gain, owned, lgd_had, dust_needed_decrease
 
