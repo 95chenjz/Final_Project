@@ -34,8 +34,8 @@ Run 'Main.py' file and it will call the class in written in 'HearthStone.py' fil
 
 
 ## All Sources Used:
-* Programming language: Python 3
+* Programming language: Python 3  
 
-The official website of HearthStone (https://hearthstone.gamepedia.com/Hearthstone_Wiki) to get the probabilities of getting different types of card.
+The official website of HearthStone (https://hearthstone.gamepedia.com/Hearthstone_Wiki) to get the probabilities of getting different types of card.  
 The Wikipidia of HearthStone (https://en.wikipedia.org/wiki/Hearthstone) for every expansion's collectible cards breakdown.
 
