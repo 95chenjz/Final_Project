@@ -30,7 +30,12 @@ We run the simulations for the first strategy and get an expectation of 317 pack
 We run simulations and calculate the two 'certain number's in the second and the third strategies by using the result of runing the first simulation. These two numbers are 125 and 115. In other words, if Blizzard used the other two strategies to decrease the number of packs to get all the cards of a certain expansion card set and wanted to get a same expectation of packs opened as using the first strategy now, it can use either the strategy of 'Players can exchange 125 dust for a new pack but they cannot craft cards with dust.' or the strategy of 'Players can obtain an pack containing only Epic and Legendary cards after they have opened 115 packs.'
 
 ## Instructions on how to use the program:
-Just run 'Main.py' file and it will call the class in written in 'HearthStone.py' file.
+Run 'Main.py' file and it will call the class in written in 'HearthStone.py' file.
+
 
 ## All Sources Used:
-The official website of HearthStone (to get the probabilities of getting different types of card).
+* Programming language: Python 3
+
+The official website of HearthStone (https://hearthstone.gamepedia.com/Hearthstone_Wiki) to get the probabilities of getting different types of card.
+The Wikipidia of HearthStone (https://en.wikipedia.org/wiki/Hearthstone) for every expansion's collectible cards breakdown.
+
